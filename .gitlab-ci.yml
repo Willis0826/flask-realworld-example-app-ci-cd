@@ -64,3 +64,4 @@ deploy.app:
   <<: *deploy-gcp
   script:
     - .ci/k8s_deploy.sh $CI_PROJECT_DIR/k8s app
+    - kubectl get svc
