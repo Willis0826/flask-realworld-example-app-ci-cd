@@ -8,15 +8,14 @@
 
 目錄
 
-- [Flask RealWorld Example App x GitLab CI](#flask-realworld-example-app-x-gitlab-ci)
-  - [GitLab CI & Environment](#gitlab-ci--environment)
+  - [GitLab CI and Environment](#gitlab-ci-and-environment)
   - [Pipeline Stage](#pipeline-stage)
     - [Test](#test)
     - [Pack](#pack)
     - [Deploy](#deploy)
   - [TODO](#todo)
 
-#### GitLab CI & Environment
+#### GitLab CI and Environment
 
 在開始 Pipeline 的運行前，需要於環境變數中提供 4個環境變數，GitLab CI 提供了相當方便的功能來設定，設定方法請參考 [Custom Environment Variables](https://docs.gitlab.com/ee/ci/variables/#custom-environment-variables)。
 
