@@ -1,0 +1,66 @@
+stages:
+  - test
+  - pack
+  - deploy
+
+# job reference
+.deploy-gcp: &deploy-gcp
+  tags:
+    - linux
+    - docker
+  image:
+    willischou/gcp-gomplate-kubectl:0.2
+  before_script:
+    - echo $GCP_CREDENTIAL_FILE > /account.json
+    - /google-cloud-sdk/bin/gcloud auth activate-service-account --key-file /account.json
+    - gcloud container clusters get-credentials standard-cluster-willis --zone asia-east1-a --project pro-talon-255310
+
+.pack-docker: &pack-docker
+  tags:
+    - docker
+  image: docker:19.03.1
+  services:
+    - docker:dind
+  before_script:
+    - echo $DOCKER_REGISTRY_PASSWORD > /password.txt
+    - cat /password.txt | base64 -d | docker login -u $DOCKER_REGISTRY_USER --password-stdin https://index.docker.io/v1/
+  retry: 1
+
+
+# test
+test.app:
+  tags:
+    - linux
+    - docker
+  stage: test
+  image: willischou/python-flask:0.2
+  script:
+    - export FLASK_APP=$CI_PROJECT_DIR/autoapp.py
+    - pip install -r requirements/dev.txt
+    - flask test
+
+lint.app:
+  tags:
+    - linux
+    - docker
+  allow_failure: true
+  stage: test
+  image: willischou/python-flask:0.2
+  script:
+    - export FLASK_APP=$CI_PROJECT_DIR/autoapp.py
+    - pip install -r requirements/dev.txt
+    - flask lint
+
+# pack
+pack.app:
+  stage: pack
+  <<: *pack-docker
+  script:
+    - .ci/docker_pack.sh . willischou/flask-realworld-example-app
+
+# deploy
+deploy.app:
+  stage: deploy
+  <<: *deploy-gcp
+  script:
+    - .ci/k8s_deploy.sh $CI_PROJECT_DIR/k8s app

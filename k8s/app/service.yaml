@@ -1,0 +1,15 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: flask-realworld-example-app
+  labels:
+    app: flask-realworld-example-app
+spec:
+  selector:
+    app: flask-realworld-example-app
+  type: LoadBalancer
+  ports:
+    - name: flask-realworld-example-app-tcp-port
+      protocol: TCP
+      port: 5000
+      targetPort: 5000

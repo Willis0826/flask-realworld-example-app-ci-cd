@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-realworld-example-app
+  labels:
+    app: flask-realworld-example-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: flask-realworld-example-app
+  template:
+    metadata:
+      labels:
+        app: flask-realworld-example-app
+    spec:
+      containers:
+        - name: flask-realworld-example-app
+          image: willischou/flask-realworld-example-app:{{.Env.VERSION}}
+          env:
+            - name: HTTP_PORT
+              value: "80"
+          ports:
+            - containerPort: 5000
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /api/articles
+              port: 5000
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            timeoutSeconds: 2
+          livenessProbe:
+            httpGet:
+              path: /api/articles
+              port: 5000
+            initialDelaySeconds: 15
+            periodSeconds: 20
+            timeoutSeconds: 2
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
