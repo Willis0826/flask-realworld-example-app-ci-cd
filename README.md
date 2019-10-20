@@ -19,9 +19,9 @@
 
 在開始 Pipeline 的運行前，需要於環境變數中提供 4個環境變數，GitLab CI 提供了相當方便的功能來設定，設定方法請參考 [Custom Environment Variables](https://docs.gitlab.com/ee/ci/variables/#custom-environment-variables)。
 
-`CONDUIT_SECRET` flask app 使用的 secret key
-`DOCKER_REGISTRY_USER` Docker Hub 的使用者名稱
-`DOCKER_REGISTRY_PASSWORD` Docker Hub 的使用者密碼，需經過 base64 編碼
+`CONDUIT_SECRET` flask app 使用的 secret key  
+`DOCKER_REGISTRY_USER` Docker Hub 的使用者名稱  
+`DOCKER_REGISTRY_PASSWORD` Docker Hub 的使用者密碼，需經過 base64 編碼  
 `GCP_CREDENTIAL_FILE` GCP 的服務帳號金鑰，如何產生金鑰請參考 [建立和管理服務帳戶金鑰](https://cloud.google.com/iam/docs/creating-managing-service-account-keys?hl=zh-tw)
 
 #### Pipeline Stage
