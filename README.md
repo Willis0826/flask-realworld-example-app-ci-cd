@@ -29,6 +29,7 @@
 ##### Test
 
 Test 階段，實作兩個工作進行單元測試(Unit Test)與風格檢查(Lint)。
+GitLab runner 使用 `willischou/python-flask` [Docker Image](https://cloud.docker.com/repository/docker/willischou/python-flask)，其中包含 python 3.7 runtime，是很簡單的一個 [Dockerfile](https://github.com/Willis0826/docker-base/blob/master/python-flask/Dockerfile)。
 
 單元測試(test.app)，安裝完成 python 套件後，執行時使用 `flask test` 進行測試，如果有錯誤，Pipeline 會在此階段中斷，因為單元測試是部署前的最低需求。
 
@@ -37,6 +38,7 @@ Test 階段，實作兩個工作進行單元測試(Unit Test)與風格檢查(Lin
 ##### Pack
 
 Pack 階段，進行 Docker build 的工作，將 flask app 透過 Dockerfile 包裝至 Docker image 中。
+GitLab runner 使用 `docker:19.03.1`，並且設定 Docker in Docker。
 
 透過 `.ci/docker_pack.sh` 腳本，將依該次觸發 Pipeline 的 commit 是否有 tag 來決定使用環境變數 `$CI_COMMIT_SHORT_SHA` 或 `$CI_COMMIT_TAG` 當作 Docker image 的版本，提供我們在 dev 環境時，使用 git commit hash 來識別版本，於 prod 環境時，則使用更易於辨識的 git commit tag 當作版本。
 
@@ -45,6 +47,7 @@ Pack 階段，進行 Docker build 的工作，將 flask app 透過 Dockerfile �
 ##### Deploy
 
 Deploy 階段，將使用 Pack 階段產出的 Docker image 部署至 Kubernetes cluster。
+GitLab runner 使用 `willischou/gcp-gomplate-kubectl` [Docker Image](https://cloud.docker.com/repository/docker/willischou/gcp-gomplate-kubectl)，其中包含進行 K8S 部署時所需的 kubectl、gcloud、gomplate 等工具。
 
 透過 `.ci/k8s_deploy.sh` 腳本，會先使用 [Gomplate](https://github.com/hairyhenderson/gomplate) 將 `/k8s/app` 目錄底下的 yaml 檔案進行變數替換，接著使用 kubectl 進行部署，其 service IP 也將在 GitLab Pipeline `deploy.app` Job 中顯示。
 
