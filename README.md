@@ -50,7 +50,7 @@ GitLab runner 使用 `docker:19.03.1`，並且設定 Docker in Docker。
 
 Deploy 階段，將使用 Pack 階段產出的 Docker image 部署至 Kubernetes cluster。
 
-GitLab runner 使用 `willischou/gcp-gomplate-kubectl` [Docker Image](https://cloud.docker.com/repository/docker/willischou/gcp-gomplate-kubectl)，其中包含進行 K8S 部署時所需的 kubectl、gcloud、gomplate 等工具。
+GitLab runner 使用 `willischou/gcp-gomplate-kubectl` [Docker Image](https://cloud.docker.com/repository/dockerk/willischou/gcp-gomplate-kubectl)，其中包含進行 K8S 部署時所需的 kubectl、gcloud、gomplate 等工具。
 
 透過 `.ci/k8s_deploy.sh` 腳本，會先使用 [Gomplate](https://github.com/hairyhenderson/gomplate) 將 `/k8s/app` 目錄底下的 yaml 檔案進行變數替換，接著使用 kubectl 進行部署，其 service IP 也將在 GitLab Pipeline `deploy.app` Job 中顯示。
 
