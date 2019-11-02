@@ -16,3 +16,4 @@ psycopg2
 Flask-Migrate
 gunicorn
 Flask-Cors
+uwsgi

@@ -14,12 +14,19 @@ spec:
       labels:
         app: flask-realworld-example-app
     spec:
+      initContainers:
+        - name: upgrade-db
+          envFrom:
+            - configMapRef:
+                name: flask-config
+          image: willischou/flask-realworld-example-app:{{.Env.VERSION}}
+          command: ['sh', '-c', 'flask db upgrade']
       containers:
         - name: flask-realworld-example-app
           image: willischou/flask-realworld-example-app:{{.Env.VERSION}}
-          env:
-            - name: HTTP_PORT
-              value: "80"
+          envFrom:
+            - configMapRef:
+                name: flask-config
           ports:
             - containerPort: 5000
               protocol: TCP
