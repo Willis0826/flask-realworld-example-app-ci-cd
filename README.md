@@ -22,9 +22,9 @@
 `CONDUIT_SECRET` flask app 使用的 secret key  
 `DOCKER_REGISTRY_USER` Docker Hub 的使用者名稱  
 `DOCKER_REGISTRY_PASSWORD` Docker Hub 的使用者密碼，需經過 base64 編碼  
-`GCP_CREDENTIAL_FILE` GCP 的服務帳號金鑰，如何產生金鑰請參考 [建立和管理服務帳戶金鑰](https://cloud.google.com/iam/docs/creating-managing-service-account-keys?hl=zh-tw)
-`DB_USER` Postgres 資料庫使用者
-`DB_PASSWORD`  Postgres 資料庫密碼
+`GCP_CREDENTIAL_FILE` GCP 的服務帳號金鑰，如何產生金鑰請參考 [建立和管理服務帳戶金鑰](https://cloud.google.com/iam/docs/creating-managing-service-account-keys?hl=zh-tw)  
+`DB_USER` Postgres 資料庫使用者  
+`DB_PASSWORD`  Postgres 資料庫密碼  
 
 #### Pipeline Stage
 
