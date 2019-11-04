@@ -23,6 +23,8 @@
 `DOCKER_REGISTRY_USER` Docker Hub 的使用者名稱  
 `DOCKER_REGISTRY_PASSWORD` Docker Hub 的使用者密碼，需經過 base64 編碼  
 `GCP_CREDENTIAL_FILE` GCP 的服務帳號金鑰，如何產生金鑰請參考 [建立和管理服務帳戶金鑰](https://cloud.google.com/iam/docs/creating-managing-service-account-keys?hl=zh-tw)
+`DB_USER` Postgres 資料庫使用者
+`DB_PASSWORD`  Postgres 資料庫密碼
 
 #### Pipeline Stage
 
@@ -52,7 +54,7 @@ Deploy 階段，將使用 Pack 階段產出的 Docker image 部署至 Kubernetes
 
 GitLab runner 使用 `willischou/gcp-gomplate-kubectl` [Docker Image](https://cloud.docker.com/repository/dockerk/willischou/gcp-gomplate-kubectl)，其中包含進行 K8S 部署時所需的 kubectl、gcloud、gomplate 等工具。
 
-透過 `.ci/k8s_deploy.sh` 腳本，會先使用 [Gomplate](https://github.com/hairyhenderson/gomplate) 將 `/k8s/app` 目錄底下的 yaml 檔案進行變數替換，接著使用 kubectl 進行部署，其 service IP 也將在 GitLab Pipeline `deploy.app` Job 中顯示。
+透過 `.ci/k8s_deploy.sh` 腳本，會先使用 [Gomplate](https://github.com/hairyhenderson/gomplate) 將 `/k8s/app` 與 `/k8s/postgres` 目錄底下的 yaml 檔案進行變數替換，接著使用 kubectl 進行部署，其 service IP 也將在 GitLab Pipeline `deploy.app` Job 中顯示。
 
 部署完成後，可以透過以下三個步驟，測試 flask app 是否運作正常，本專案部署後 Load Balancer IP 與 port 為 35.201.240.242:5000。
 
@@ -117,7 +119,5 @@ Kubernetes cluster 系統監控，可以透過 Prometheus-operator 進行，並�
 Flask app 應用程式監控，可以通過 Middleware 進行採集並且送至 InfluxDB 等等時間序列資料庫，並由 Grafana 進行觀察與警示。
 2. Prod 環境建置
 建置 Prod 與 Dev 兩個版本的部署，最佳實務是分別部署於兩座不同的 Kubernetes  叢集中，然而，本範例只使用了一座叢集，無法實際展示多環境的部署。
-3. Flask app 使用 Prod 模式運行
-Flask app 使用 prod 模式運行，將需要同時部署 Postgres 資料庫，為了簡化應用程式設定，本範例僅使用 dev 模式運行且使用 `FLASK_DEBUG = 1`，
-4. 建置與部署分離
+3. 建置與部署分離
 本範例將 Pack 與 Deploy 兩個工作放在同一個 Repository 中呈現，是為了展示緣故；若同時擁有多個應用程式需要建置與部署，將部署工作抽出至另一個 Repository 中，統一管理應用程式部署與基礎架構，將降低部署相依性管理的複雜度，且優化 Infra as code 的代碼結構。
