@@ -48,6 +48,8 @@ GitLab runner 使用 `docker:19.03.1`，並且設定 Docker in Docker。
 
 另外於 Dockerfile 中，根據 Flask 的建議，先進行 [uwsgi](https://flask.palletsprojects.com/en/1.1.x/deploying/wsgi-standalone/#uwsgi) 套件的安裝，最終將 flask app 運行於 uwsgi 後面。
 
+Database migration 的腳本在 `/migrations` 資料夾中，在 Docker image 建置的過程中，也會一併被打包，待後續的 K8S [Init Containers](https://kubernetes.io/docs/concepts/workloads/pods/init-containers/) 時執行 `flask db upgrade` 將 Postgres DB 進行升版。
+
 ##### Deploy
 
 Deploy 階段，將使用 Pack 階段產出的 Docker image 部署至 Kubernetes cluster。

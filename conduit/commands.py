@@ -36,7 +36,7 @@ def lint(fix_imports):
 
     def execute_tool(description, *args):
         """Execute a checking tool with its arguments."""
-        command_line = list(args) + files_and_directories
+        command_line = list(args) + files_and_directories + ["--exclude=migrations"]
         click.echo('{}: {}'.format(description, ' '.join(command_line)))
         rv = call(command_line)
         if rv != 0:
