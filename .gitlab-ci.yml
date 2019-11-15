@@ -15,6 +15,7 @@ stages:
   before_script:
     - echo $GCP_CREDENTIAL_FILE > /account.json
     - /google-cloud-sdk/bin/gcloud auth activate-service-account --key-file /account.json
+    - export GOOGLE_APPLICATION_CREDENTIALS=/account.json
     - gcloud container clusters get-credentials standard-cluster-willis --zone asia-east1-a --project pro-talon-255310
 
 .pack-docker: &pack-docker
