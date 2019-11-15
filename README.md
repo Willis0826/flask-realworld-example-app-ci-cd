@@ -25,6 +25,9 @@
 `GCP_CREDENTIAL_FILE` GCP 的服務帳號金鑰，如何產生金鑰請參考 [建立和管理服務帳戶金鑰](https://cloud.google.com/iam/docs/creating-managing-service-account-keys?hl=zh-tw)  
 `DB_USER` Postgres 資料庫使用者  
 `DB_PASSWORD`  Postgres 資料庫密碼  
+`K8S_CLUSTER_NAEM` Kubernetes 叢集的名稱，使用於 kops 中  
+`KOPS_STATE_STORE` Google storage bucket uri，用於儲存 kops 部署的叢集狀態  
+`KOPS_FEATURE_FLAGS` AlphaAllowGCE，允許 kops 在 GCP 上進行部署  
 
 #### Pipeline Stage
 

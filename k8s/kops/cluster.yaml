@@ -1,0 +1,50 @@
+apiVersion: kops/v1alpha2
+kind: Cluster
+metadata:
+  name: {{.Env.K8S_CLUSTER_NAEM}}
+spec:
+  api:
+    loadBalancer:
+      type: Public
+  authorization:
+    rbac: {}
+  channel: stable
+  cloudProvider: gce
+  configBase: {{.Env.KOPS_STATE_STORE}}{{.Env.K8S_CLUSTER_NAEM}}
+  etcdClusters:
+  - cpuRequest: 200m
+    etcdMembers:
+    - instanceGroup: master-us-central1-a
+      name: a
+    memoryRequest: 100Mi
+    name: main
+  - cpuRequest: 100m
+    etcdMembers:
+    - instanceGroup: master-us-central1-a
+      name: a
+    memoryRequest: 100Mi
+    name: events
+  iam:
+    allowContainerRegistry: true
+    legacy: false
+  kubelet:
+    anonymousAuth: false
+  kubernetesApiAccess:
+  - 0.0.0.0/0
+  kubernetesVersion: 1.14.8
+  masterPublicName: api.{{.Env.K8S_CLUSTER_NAEM}}
+  networking:
+    kubenet: {}
+  nonMasqueradeCIDR: 100.64.0.0/10
+  project: pro-talon-255310
+  sshAccess:
+  - 0.0.0.0/0
+  subnets:
+  - name: us-central1
+    region: us-central1
+    type: Public
+  topology:
+    dns:
+      type: Public
+    masters: public
+    nodes: public

@@ -1,7 +1,9 @@
 stages:
   - test
   - pack
+  - cluster
   - deploy
+  - teardown
 
 # job reference
 .deploy-gcp: &deploy-gcp
@@ -9,7 +11,7 @@ stages:
     - linux
     - docker
   image:
-    willischou/gcp-gomplate-kubectl:0.2
+    willischou/gcp-gomplate-kubectl:0.3
   before_script:
     - echo $GCP_CREDENTIAL_FILE > /account.json
     - /google-cloud-sdk/bin/gcloud auth activate-service-account --key-file /account.json
@@ -58,6 +60,13 @@ pack.app:
   script:
     - .ci/docker_pack.sh . willischou/flask-realworld-example-app
 
+# cluster
+cluster.apply:
+  stage: cluster
+  <<: *deploy-gcp
+  script:
+    - .ci/kops_deploy.sh $CI_PROJECT_DIR/k8s kops $K8S_CLUSTER_NAEM
+
 # deploy
 deploy.app:
   stage: deploy
@@ -72,3 +81,11 @@ deploy.postgres:
   script:
     - .ci/k8s_deploy.sh $CI_PROJECT_DIR/k8s postgres
     - kubectl get svc
+
+# teardown
+teardown.cluster:
+  stage: teardown
+  when: manual
+  <<: *deploy-gcp
+  script:
+    - echo "stage teardown unimplemented"
