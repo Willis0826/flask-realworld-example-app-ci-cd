@@ -55,3 +55,6 @@ dev.db
 
 # Vagrant machines
 .vagrant/**
+
+# build
+dist/

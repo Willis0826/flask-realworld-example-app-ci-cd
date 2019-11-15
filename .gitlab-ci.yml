@@ -73,6 +73,7 @@ deploy.app:
   stage: deploy
   <<: *deploy-gcp
   script:
+    - kops export kubecfg $K8S_CLUSTER_NAEM
     - .ci/k8s_deploy.sh $CI_PROJECT_DIR/k8s app
     - kubectl get svc
 
@@ -80,6 +81,7 @@ deploy.postgres:
   stage: deploy
   <<: *deploy-gcp
   script:
+    - kops export kubecfg $K8S_CLUSTER_NAEM
     - .ci/k8s_deploy.sh $CI_PROJECT_DIR/k8s postgres
     - kubectl get svc
 
