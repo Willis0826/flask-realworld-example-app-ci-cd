@@ -4,7 +4,7 @@
 
 [![pipeline status](https://gitlab.com/Willis0826/flask-realworld-example-app-ci-cd/badges/master/pipeline.svg)](https://gitlab.com/Willis0826/flask-realworld-example-app-ci-cd/commits/master)
 
-本專案將介紹如何透過 GitLab CI，可以建置一個具有 Test、Pack、Deploy 三個階段的 Pipeline 來進行持續整合與部屬(CI/CD)，專案使用的範例程式為 [flask-realworld-example-app](https://github.com/gothinkster/flask-realworld-example-app)，部屬運行的平台為 [GKE](https://cloud.google.com/kubernetes-engine/?hl=zh-tw)，Docker image 發佈至 [Docker Hub](https://cloud.docker.com/repository/docker/willischou/flask-realworld-example-app/general)
+本專案將介紹如何透過 GitLab CI，可以建置一個具有 Test、Pack、Cluster、Deploy 四個階段的 Pipeline 來進行持續整合與部屬(CI/CD)，專案使用的範例程式為 [flask-realworld-example-app](https://github.com/gothinkster/flask-realworld-example-app)，部屬運行的平台為 [GCE](https://cloud.google.com/compute/)，Docker image 發佈至 [Docker Hub](https://cloud.docker.com/repository/docker/willischou/flask-realworld-example-app/general)
 
 目錄
 
@@ -12,6 +12,7 @@
   - [Pipeline Stage](#pipeline-stage)
     - [Test](#test)
     - [Pack](#pack)
+    - [Cluster](#cluster)
     - [Deploy](#deploy)
   - [TODO](#todo)
 
@@ -53,17 +54,25 @@ GitLab runner 使用 `docker:19.03.1`，並且設定 Docker in Docker。
 
 Database migration 的腳本在 `/migrations` 資料夾中，在 Docker image 建置的過程中，也會一併被打包，待後續的 K8S [Init Containers](https://kubernetes.io/docs/concepts/workloads/pods/init-containers/) 時執行 `flask db upgrade` 將 Postgres DB 進行升版。
 
+##### Cluster
+
+Cluster 階段，使用 Kops 依照 `/k8s/kops` 依序部署 cluster 與 instance group。
+
+並使用環境變數中設定的 `KOPS_STATE_STORE` 來儲存 Kops 的狀態檔案與 `K8S_CLUSTER_NAEM` 指定叢集名稱。
+
+該階段在叢集開始部署後，會進入一個迴圈等待叢集完成準備。
+
 ##### Deploy
 
-Deploy 階段，將使用 Pack 階段產出的 Docker image 部署至 Kubernetes cluster。
+Deploy 階段，將使用 Pack 階段產出的 Docker image 部署至 Kubernetes cluster。
 
-GitLab runner 使用 `willischou/gcp-gomplate-kubectl` [Docker Image](https://cloud.docker.com/repository/dockerk/willischou/gcp-gomplate-kubectl)，其中包含進行 K8S 部署時所需的 kubectl、gcloud、gomplate 等工具。
+GitLab runner 使用 `willischou/gcp-gomplate-kubectl` [Docker Image](https://cloud.docker.com/repository/dockerk/willischou/gcp-gomplate-kubectl)，其中包含進行 K8S 部署時所需的 kubectl、gcloud、gomplate、kops 等工具。
 
-透過 `.ci/k8s_deploy.sh` 腳本，會先使用 [Gomplate](https://github.com/hairyhenderson/gomplate) 將 `/k8s/app` 與 `/k8s/postgres` 目錄底下的 yaml 檔案進行變數替換，接著使用 kubectl 進行部署，其 service IP 也將在 GitLab Pipeline `deploy.app` Job 中顯示。
+透過 `.ci/k8s_deploy.sh` 腳本，會先使用 [Gomplate](https://github.com/hairyhenderson/gomplate) 將 `/k8s/app`, `/k8s/postgres`, `k8s/nginx-ingress` 目錄底下的 yaml 檔案進行變數替換，接著使用 kubectl 進行部署；完成部署後，Ingress service IP 也將在 GitLab Pipeline `deploy.nginx-ingress` Job 中顯示。
 
-部署完成後，可以透過以下三個步驟，測試 flask app 是否運作正常，本專案部署後 Load Balancer IP 與 port 為 35.201.240.242:5000。
+可以透過以下三個步驟，測試 flask app 是否運作正常，本專案部署後 Ingress External IP 與 path 為 `34.67.218.129/flask/`。
 
-1. 創建使用者 POST `/api/users` 設定 HTTP 標頭  `Content-Type: application/json` ，內容為
+1. 創建使用者 POST `34.67.218.129/flask/api/users` 設定 HTTP 標頭  `Content-Type: application/json` ，內容為
 
 ```json
 {
@@ -75,7 +84,7 @@ GitLab runner 使用 `willischou/gcp-gomplate-kubectl` [Docker Image](https://cl
 }
 ```
 
-2. 創建文章 POST `/api/articles` 設定 HTTP 標頭 `Authorization: Token <jwt_token>`，內容為
+2. 創建文章 POST `34.67.218.129/flask/api/articles` 設定 HTTP 標頭 `Authorization: Token <jwt_token>`，內容為
 
 ```json
 {
@@ -87,7 +96,7 @@ GitLab runner 使用 `willischou/gcp-gomplate-kubectl` [Docker Image](https://cl
 }
 ```
 
-3. 查看文章 GET `/api/articles`，回應為
+3. 查看文章 GET `34.67.218.129/flask/api/articles`，回應為
 
 ```json
 {

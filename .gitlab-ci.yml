@@ -85,6 +85,14 @@ deploy.postgres:
     - .ci/k8s_deploy.sh $CI_PROJECT_DIR/k8s postgres
     - kubectl get svc
 
+deploy.nginx-ingress:
+  stage: deploy
+  <<: *deploy-gcp
+  script:
+    - kops export kubecfg $K8S_CLUSTER_NAEM
+    - .ci/k8s_deploy.sh $CI_PROJECT_DIR/k8s nginx-ingress
+    - kubectl get svc
+
 # teardown
 teardown.cluster:
   stage: teardown
