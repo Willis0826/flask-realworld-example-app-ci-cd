@@ -4,7 +4,7 @@
 
 [![pipeline status](https://gitlab.com/Willis0826/flask-realworld-example-app-ci-cd/badges/master/pipeline.svg)](https://gitlab.com/Willis0826/flask-realworld-example-app-ci-cd/commits/master)
 
-本專案將介紹如何透過 GitLab CI，可以建置一個具有 Test、Pack、Cluster、Deploy 四個階段的 Pipeline 來進行持續整合與部屬(CI/CD)，專案使用的範例程式為 [flask-realworld-example-app](https://github.com/gothinkster/flask-realworld-example-app)，部屬運行的平台為 [GCE](https://cloud.google.com/compute/)，Docker image 發佈至 [Docker Hub](https://cloud.docker.com/repository/docker/willischou/flask-realworld-example-app/general)
+本專案將介紹如何透過 GitLab CI，可以建置一個具有 Test、Pack、Cluster、Deploy 四個階段的 Pipeline 來進行持續整合與部屬(CI/CD)，專案使用的範例程式為 [flask-realworld-example-app](https://github.com/gothinkster/flask-realworld-example-app)，部屬運行的平台為 [GCE](https://cloud.google.com/compute/)，Docker image 發佈至 [Docker Hub](https://cloud.docker.com/repository/docker/willischou/flask-realworld-example-app/general)。
 
 目錄
 
@@ -18,7 +18,7 @@
 
 #### GitLab CI and Environment
 
-在開始 Pipeline 的運行前，需要於環境變數中提供 4個環境變數，GitLab CI 提供了相當方便的功能來設定，設定方法請參考 [Custom Environment Variables](https://docs.gitlab.com/ee/ci/variables/#custom-environment-variables)。
+在開始 Pipeline 的運行前，需要於環境變數中提供 9個環境變數，GitLab CI 提供了相當方便的功能來設定，設定方法請參考 [Custom Environment Variables](https://docs.gitlab.com/ee/ci/variables/#custom-environment-variables)。
 
 `CONDUIT_SECRET` flask app 使用的 secret key  
 `DOCKER_REGISTRY_USER` Docker Hub 的使用者名稱  
