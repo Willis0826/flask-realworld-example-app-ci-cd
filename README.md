@@ -4,6 +4,8 @@
 
 [![pipeline status](https://gitlab.com/Willis0826/flask-realworld-example-app-ci-cd/badges/master/pipeline.svg)](https://gitlab.com/Willis0826/flask-realworld-example-app-ci-cd/commits/master)
 
+English document is [here](./README-en.md)
+
 本專案將介紹如何透過 GitLab CI，可以建置一個具有 Test、Pack、Cluster、Deploy 四個階段的 Pipeline 來進行持續整合與部屬(CI/CD)，專案使用的範例程式為 [flask-realworld-example-app](https://github.com/gothinkster/flask-realworld-example-app)，部屬運行的平台為 [GCE](https://cloud.google.com/compute/)，Docker image 發佈至 [Docker Hub](https://cloud.docker.com/repository/docker/willischou/flask-realworld-example-app/general)。
 
 目錄
@@ -36,7 +38,7 @@
 
 Test 階段，實作兩個工作進行單元測試(Unit Test)與風格檢查(Lint)。
 
-GitLab runner 使用 `willischou/python-flask` [Docker Image](https://cloud.docker.com/repository/docker/willischou/python-flask)，其中包含 python 3.7 runtime，是很簡單的一個 [Dockerfile](https://github.com/Willis0826/docker-base/blob/master/python-flask/Dockerfile)。
+GitLab runner 使用 `willischou/python-flask` [Docker Image](https://cloud.docker.com/repository/docker/willischou/python-flask)，其中包含 python 3.7 runtime，該 Docker Image 是由很簡單的 [Dockerfile](https://github.com/Willis0826/docker-base/blob/master/python-flask/Dockerfile) 建置。
 
 單元測試(test.app)，安裝完成 python 套件後，執行時使用 `flask test` 進行測試，如果有錯誤，Pipeline 會在此階段中斷，因為單元測試是部署前的最低需求。
 
@@ -46,7 +48,7 @@ GitLab runner 使用 `willischou/python-flask` [Docker Image](https://cloud.dock
 
 Pack 階段，進行 Docker build 的工作，將 flask app 透過 Dockerfile 包裝至 Docker image 中。
 
-GitLab runner 使用 `docker:19.03.1`，並且設定 Docker in Docker。
+GitLab runner 使用 `docker:19.03.1`，並且[設定 Docker in Docker](https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#use-docker-in-docker-workflow-with-docker-executor)。
 
 透過 `.ci/docker_pack.sh` 腳本，將依該次觸發 Pipeline 的 commit 是否有 tag 來決定使用環境變數 `$CI_COMMIT_SHORT_SHA` 或 `$CI_COMMIT_TAG` 當作 Docker image 的版本，提供我們在 dev 環境時，使用 git commit hash 來識別版本，於 prod 環境時，則使用更易於辨識的 git commit tag 當作版本。
 
