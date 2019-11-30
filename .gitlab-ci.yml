@@ -93,6 +93,7 @@ cluster.dev.apply:
     - .ci/kops_deploy.sh $CI_PROJECT_DIR/k8s kops $K8S_CLUSTER_NAEM
 
 cluster.prod.apply:
+  when: manual
   stage: cluster.prod
   <<: *deploy-prod
   script:
