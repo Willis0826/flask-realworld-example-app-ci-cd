@@ -25,6 +25,7 @@ stages:
   only:
     refs:
       - master
+      - tags
   except:
     refs:
       - schedules
