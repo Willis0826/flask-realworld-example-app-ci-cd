@@ -17,6 +17,16 @@ stages:
     - /google-cloud-sdk/bin/gcloud auth activate-service-account --key-file /account.json
     - export GOOGLE_APPLICATION_CREDENTIALS=/account.json
 
+.deploy-dev: &deploy-dev
+  <<: *deploy-gcp
+  environment:
+    name: dev
+
+.deploy-prod: &deploy-prod
+  <<: *deploy-gcp
+  environment:
+    name: prod
+
 .pack-docker: &pack-docker
   tags:
     - docker
@@ -61,42 +71,42 @@ pack.app:
     - .ci/docker_pack.sh . willischou/flask-realworld-example-app
 
 # cluster
-cluster.apply:
+cluster.dev.apply:
   stage: cluster
-  <<: *deploy-gcp
+  <<: *deploy-dev
   script:
     - .ci/kops_deploy.sh $CI_PROJECT_DIR/k8s kops $K8S_CLUSTER_NAEM
 
 # deploy
-deploy.app:
+deploy.dev.app:
   stage: deploy
-  <<: *deploy-gcp
+  <<: *deploy-dev
   script:
     - kops export kubecfg $K8S_CLUSTER_NAEM
     - .ci/k8s_deploy.sh $CI_PROJECT_DIR/k8s app
     - kubectl get svc
 
-deploy.postgres:
+deploy.dev.postgres:
   stage: deploy
-  <<: *deploy-gcp
+  <<: *deploy-dev
   script:
     - kops export kubecfg $K8S_CLUSTER_NAEM
     - .ci/k8s_deploy.sh $CI_PROJECT_DIR/k8s postgres
     - kubectl get svc
 
-deploy.nginx-ingress:
+deploy.dev.nginx-ingress:
   stage: deploy
-  <<: *deploy-gcp
+  <<: *deploy-dev
   script:
     - kops export kubecfg $K8S_CLUSTER_NAEM
     - .ci/k8s_deploy.sh $CI_PROJECT_DIR/k8s nginx-ingress
     - kubectl get svc
 
 # teardown
-teardown.cluster:
+teardown.dev.cluster:
   stage: teardown
   when: manual
-  <<: *deploy-gcp
+  <<: *deploy-dev
   script:
     - kops export kubecfg $K8S_CLUSTER_NAEM
     - .ci/kops_delete.sh $CI_PROJECT_DIR/k8s kops $K8S_CLUSTER_NAEM
