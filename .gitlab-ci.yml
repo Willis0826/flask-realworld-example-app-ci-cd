@@ -21,11 +21,20 @@ stages:
   <<: *deploy-gcp
   environment:
     name: dev
+  only:
+    refs:
+      - master
+  except:
+    refs:
+      - schedules
 
 .deploy-prod: &deploy-prod
   <<: *deploy-gcp
   environment:
     name: prod
+  only:
+    refs:
+      - master
 
 .pack-docker: &pack-docker
   tags:

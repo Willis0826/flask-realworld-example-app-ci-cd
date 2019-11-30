@@ -58,7 +58,7 @@ Database migration 的腳本在 `/migrations` 資料夾中，在 Docker image �
 
 ##### Cluster
 
-Cluster 階段，使用 Kops 依照 `/k8s/kops` 依序部署 cluster 與 instance group。
+Cluster 階段，使用 Kops 依照 `/k8s/kops` 依序部署 cluster 與 instance group 在 GCP 上。
 
 並使用環境變數中設定的 `KOPS_STATE_STORE` 來儲存 Kops 的狀態檔案與 `K8S_CLUSTER_NAEM` 指定叢集名稱。
 
