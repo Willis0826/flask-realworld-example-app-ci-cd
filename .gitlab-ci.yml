@@ -37,6 +37,7 @@ stages:
   only:
     refs:
       - master
+      - tags
     variables:
       - $CI_COMMIT_TAG =~ /^v(\d+\.)(\d+\.)(\*|\d+)/
   except:
