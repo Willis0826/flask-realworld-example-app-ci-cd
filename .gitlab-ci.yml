@@ -99,4 +99,4 @@ teardown.cluster:
   <<: *deploy-gcp
   script:
     - kops export kubecfg $K8S_CLUSTER_NAEM
-    - .ci/kops_delete.sh $CI_PROJECT_DIR/k8s nginx-ingress
+    - .ci/kops_delete.sh $CI_PROJECT_DIR/k8s kops $K8S_CLUSTER_NAEM
