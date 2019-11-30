@@ -98,4 +98,5 @@ teardown.cluster:
   when: manual
   <<: *deploy-gcp
   script:
-    - echo "stage teardown unimplemented"
+    - kops export kubecfg $K8S_CLUSTER_NAEM
+    - .ci/k8s_delete.sh $CI_PROJECT_DIR/k8s nginx-ingress
