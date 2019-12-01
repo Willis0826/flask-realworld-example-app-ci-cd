@@ -1,4 +1,4 @@
-![GitHub Logo](/image.png)
+![Flask example icon](/image.png)
 
 ### Flask RealWorld Example App x GitLab CI
 
@@ -16,21 +16,30 @@ English document is [here](./README-en.md)
     - [Pack](#pack)
     - [Cluster](#cluster)
     - [Deploy](#deploy)
+  - [Promote to production](#promote-to-production)
   - [TODO](#todo)
 
 #### GitLab CI and Environment
 
 在開始 Pipeline 的運行前，需要於環境變數中提供 9個環境變數，GitLab CI 提供了相當方便的功能來設定，設定方法請參考 [Custom Environment Variables](https://docs.gitlab.com/ee/ci/variables/#custom-environment-variables)。
 
-`CONDUIT_SECRET` flask app 使用的 secret key  
-`DOCKER_REGISTRY_USER` Docker Hub 的使用者名稱  
-`DOCKER_REGISTRY_PASSWORD` Docker Hub 的使用者密碼，需經過 base64 編碼  
-`GCP_CREDENTIAL_FILE` GCP 的服務帳號金鑰，如何產生金鑰請參考 [建立和管理服務帳戶金鑰](https://cloud.google.com/iam/docs/creating-managing-service-account-keys?hl=zh-tw)  
-`DB_USER` Postgres 資料庫使用者  
-`DB_PASSWORD`  Postgres 資料庫密碼  
-`K8S_CLUSTER_NAEM` Kubernetes 叢集的名稱，使用於 kops 中  
-`KOPS_STATE_STORE` Google storage bucket uri，用於儲存 kops 部署的叢集狀態  
-`KOPS_FEATURE_FLAGS` AlphaAllowGCE，允許 kops 在 GCP 上進行部署  
+本專案的 Pipeline 將會依照是否有 Git Tags 來控制部署在 dev 與 prod 環境，所以，我們也需要先在 Gitlab Environment 建立對應的環境名稱，請參考 [Viewing environments and deployments](https://docs.gitlab.com/ee/ci/environments.html#working-with-environments)
+
+建立好 dev 與 prod 兩個環境後，Gitlab 支援我們可以將 Environment Variables 與特定的 Environment 關聯在一起，使得 `.gitlab-ci.yaml` 當中可以使用 `environment` 欄位來決定套用的環境變數值。
+
+以下列出本專案所有需要的環境變數：  
+
+`環境變數名稱` **(環境範圍)** 描述
+
+`DB_USER` **(dev, prod)** Postgres 資料庫使用者  
+`DB_PASSWORD` **(dev, prod)** Postgres 資料庫密碼  
+`K8S_CLUSTER_NAEM` **(dev, prod)** Kubernetes 叢集的名稱，使用於 kops 中  
+`CONDUIT_SECRET` **(dev, prod)** flask app 使用的 secret key  
+`DOCKER_REGISTRY_USER` **(all)** Docker Hub 的使用者名稱  
+`DOCKER_REGISTRY_PASSWORD` **(all)** Docker Hub 的使用者密碼，需經過 base64 編碼  
+`GCP_CREDENTIAL_FILE` **(all)** GCP 的服務帳號金鑰，如何產生金鑰請參考 [建立和管理服務帳戶金鑰](https://cloud.google.com/iam/docs/creating-managing-service-account-keys?hl=zh-tw)  
+`KOPS_STATE_STORE` **(all)** Google storage bucket uri，用於儲存 kops 部署的叢集狀態  
+`KOPS_FEATURE_FLAGS` **(all)** AlphaAllowGCE，允許 kops 在 GCP 上進行部署  
 
 #### Pipeline Stage
 
@@ -126,6 +135,12 @@ GitLab runner 使用 `willischou/gcp-gomplate-kubectl` [Docker Image](https://cl
 }
 ```
 
+#### Promote to production
+
+透過 Gitlab 環境分出 dev 與 prod 兩個環境後，需要建立部署正式環境的機制，本專案設計為 Git commit 含有符合 v0.0.0 格式的 Tags 時，會觸發部署正式環境的工作。
+
+![Pipeline](https://res.cloudinary.com/dqlglve8h/image/upload/v1575198777/repo-pipeline-prod_y9afuy.png)
+
 #### TODO
 
 本專案仍然有許多未實作的工作，以下將列舉並且說明。
@@ -133,7 +148,5 @@ GitLab runner 使用 `willischou/gcp-gomplate-kubectl` [Docker Image](https://cl
 1. 系統監控
 Kubernetes cluster 系統監控，可以透過 Prometheus-operator 進行，並且搭配 Node-Exporter 取得叢集狀態，此專案使用的範例叢集已經完成該項部署，然而，因尚未部署 Grafana 至叢集中，待完成後，將會整理至獨立的 Repository，統一管理叢集相關資源。
 Flask app 應用程式監控，可以通過 Middleware 進行採集並且送至 InfluxDB 等等時間序列資料庫，並由 Grafana 進行觀察與警示。
-2. Prod 環境建置
-建置 Prod 與 Dev 兩個版本的部署，最佳實務是分別部署於兩座不同的 Kubernetes  叢集中，然而，本範例只使用了一座叢集，無法實際展示多環境的部署。
-3. 建置與部署分離
+2. 建置與部署分離
 本範例將 Pack 與 Deploy 兩個工作放在同一個 Repository 中呈現，是為了展示緣故；若同時擁有多個應用程式需要建置與部署，將部署工作抽出至另一個 Repository 中，統一管理應用程式部署與基礎架構，將降低部署相依性管理的複雜度，且優化 Infra as code 的代碼結構。
