@@ -4,6 +4,8 @@
 
 [![pipeline status](https://gitlab.com/Willis0826/flask-realworld-example-app-ci-cd/badges/master/pipeline.svg)](https://gitlab.com/Willis0826/flask-realworld-example-app-ci-cd/commits/master)
 
+[![coverage report](https://gitlab.com/Willis0826/flask-realworld-example-app-ci-cd/badges/master/coverage.svg)](https://gitlab.com/Willis0826/flask-realworld-example-app-ci-cd/commits/master)
+
 English document is [here](./README-en.md)
 
 本專案將介紹如何透過 GitLab CI，可以建置一個具有 Test、Pack、Cluster、Deploy 四個階段的 Pipeline 來進行持續整合與部屬(CI/CD)，專案使用的範例程式為 [flask-realworld-example-app](https://github.com/gothinkster/flask-realworld-example-app)，部屬運行的平台為 [GCE](https://cloud.google.com/compute/)，Docker image 發佈至 [Docker Hub](https://cloud.docker.com/repository/docker/willischou/flask-realworld-example-app/general)。
