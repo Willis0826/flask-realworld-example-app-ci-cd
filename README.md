@@ -2,9 +2,7 @@
 
 ### Flask RealWorld Example App x GitLab CI
 
-[![pipeline status](https://gitlab.com/Willis0826/flask-realworld-example-app-ci-cd/badges/master/pipeline.svg)](https://gitlab.com/Willis0826/flask-realworld-example-app-ci-cd/commits/master)
-
-[![coverage report](https://gitlab.com/Willis0826/flask-realworld-example-app-ci-cd/badges/master/coverage.svg)](https://gitlab.com/Willis0826/flask-realworld-example-app-ci-cd/commits/master)
+[![pipeline status](https://gitlab.com/Willis0826/flask-realworld-example-app-ci-cd/badges/master/pipeline.svg)](https://gitlab.com/Willis0826/flask-realworld-example-app-ci-cd/commits/master) [![coverage report](https://gitlab.com/Willis0826/flask-realworld-example-app-ci-cd/badges/master/coverage.svg)](https://gitlab.com/Willis0826/flask-realworld-example-app-ci-cd/commits/master)
 
 English document is [here](./README-en.md)
 
