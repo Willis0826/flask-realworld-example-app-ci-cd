@@ -4,6 +4,7 @@
 flake8
 # Testing
 pytest
+pytest-cov
 WebTest
 factory-boy
 # For python 3
