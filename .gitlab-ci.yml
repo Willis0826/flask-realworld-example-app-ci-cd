@@ -15,6 +15,7 @@ stages:
     willischou/gcp-gomplate-kubectl:0.3
   before_script:
     - echo $GCP_CREDENTIAL_FILE > /account.json
+    - ls -la /
     - /google-cloud-sdk/bin/gcloud auth activate-service-account --key-file /account.json
     - export GOOGLE_APPLICATION_CREDENTIALS=/account.json
 
