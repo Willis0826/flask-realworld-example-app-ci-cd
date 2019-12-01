@@ -81,9 +81,9 @@ GitLab runner 使用 `willischou/gcp-gomplate-kubectl` [Docker Image](https://cl
 
 透過 `.ci/k8s_deploy.sh` 腳本，會先使用 [Gomplate](https://github.com/hairyhenderson/gomplate) 將 `/k8s/app`, `/k8s/postgres`, `k8s/nginx-ingress` 目錄底下的 yaml 檔案進行變數替換，接著使用 kubectl 進行部署；完成部署後，Ingress service IP 也將在 GitLab Pipeline `deploy.nginx-ingress` Job 中顯示。
 
-可以透過以下三個步驟，測試 flask app 是否運作正常，本專案部署後 Ingress External IP 與 path 為 `34.67.218.129/flask/`。
+可以透過以下三個步驟，測試 flask app 是否運作正常，本專案部署後 Ingress External IP 與 path 為 `35.202.214.124/flask/`。
 
-1. 創建使用者 POST `34.67.218.129/flask/api/users` 設定 HTTP 標頭  `Content-Type: application/json` ，內容為
+1. 創建使用者 POST `35.202.214.124/flask/api/users` 設定 HTTP 標頭  `Content-Type: application/json` ，內容為
 
 ```json
 {
@@ -95,7 +95,7 @@ GitLab runner 使用 `willischou/gcp-gomplate-kubectl` [Docker Image](https://cl
 }
 ```
 
-2. 創建文章 POST `34.67.218.129/flask/api/articles` 設定 HTTP 標頭 `Authorization: Token <jwt_token>`，內容為
+2. 創建文章 POST `35.202.214.124/flask/api/articles` 設定 HTTP 標頭 `Authorization: Token <jwt_token>`，內容為
 
 ```json
 {
@@ -107,7 +107,7 @@ GitLab runner 使用 `willischou/gcp-gomplate-kubectl` [Docker Image](https://cl
 }
 ```
 
-3. 查看文章 GET `34.67.218.129/flask/api/articles`，回應為
+3. 查看文章 GET `35.202.214.124/flask/api/articles`，回應為
 
 ```json
 {
